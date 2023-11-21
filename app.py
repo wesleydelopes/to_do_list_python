@@ -32,18 +32,22 @@ def adicionar_tarefa(nova_tarefa):
         cur.execute('INSERT INTO tarefas (tarefa) VALUES (?)', (nova_tarefa,))
     print(f"Tarefa '{nova_tarefa}' adicionada com sucesso!")
 
-#Função para remover uma tarefa da lista
+# Função para remover uma tarefa da lista
 def remover_tarefa(numero_tarefa):
     with con:
         cur = con.cursor()
         cur.execute('SELECT tarefa FROM tarefas')
         tarefas = cur.fetchall()
-        if 1 <= numero_tarefa <= len(tarefas):
+
+        if not tarefas:
+            print("Nenhuma tarefa para remover.")
+        elif 1 <= numero_tarefa <= len(tarefas):
             tarefa_removida = tarefas[numero_tarefa - 1][0]
             cur.execute('DELETE FROM tarefas WHERE id = (SELECT id FROM tarefas LIMIT 1 OFFSET ?)', (numero_tarefa - 1,))
             print(f"Tarefa '{tarefa_removida}' removida com sucesso!")
         else:
             print("Número de tarefa inválido.")
+
 
 #Menu de opções
 while True:
